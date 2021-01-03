@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,6 +25,8 @@ namespace HttpAsynchronous
         public MainPage()
         {
             this.InitializeComponent();
+            this.httpRequest();
+            
         }
         private void HyperlinkButton_Click(object sender, RoutedEventArgs e)
         {
@@ -48,6 +51,7 @@ namespace HttpAsynchronous
 
         private List<Currency> CurrencyObjectsList = new List<Currency>();
         private List<NastedRates> nastedRates = new List<NastedRates>();
+        private List<String> links = new List<String>();
 
         public class NastedRates
         {
@@ -60,6 +64,10 @@ namespace HttpAsynchronous
             [JsonProperty(PropertyName = "mid")]
             public double mid { get; set; }
 
+            private string url;
+            public string Url { get { return url; } set { url = value; } }
+
+
             private int factor;
             public int Factor { get { return factor; } set { factor = value; } }
         }
@@ -67,9 +75,10 @@ namespace HttpAsynchronous
         private void button_ClickAsync(object sender, RoutedEventArgs e)
         {
             httpRequest();
+
         }
 
-        private async System.Threading.Tasks.Task httpRequest()
+        private async void httpRequest()
 
         {
             HttpWebRequest myRequest = (HttpWebRequest)WebRequest.Create("http://api.nbp.pl/api/exchangerates/tables/A/2020-03-01/2020-04-01/");
@@ -83,6 +92,7 @@ namespace HttpAsynchronous
                     CurrencyDateList.DisplayMemberPath = "effectiveDate";
                 }
             }
+            this.addUrl();
         }
 
         private void listView_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -90,6 +100,7 @@ namespace HttpAsynchronous
             int index = 0;
             index = CurrencyDateList.SelectedIndex;
             addFactor(index);
+           
         }
 
         private void listView1_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -101,18 +112,69 @@ namespace HttpAsynchronous
 
         private async System.Threading.Tasks.Task addFactor(int index)
         {
-            foreach (Currency item in CurrencyObjectsList)
-            {
-                foreach (NastedRates nastedRate in item.rates)
+            int i = 0;
+            
+                foreach (NastedRates nastedRate in CurrencyObjectsList[index].rates)
                 {
                     if (nastedRate.mid < 0.1)
                     { nastedRate.Factor = 100; }
                     else nastedRate.Factor = 1;
-                    Console.WriteLine(nastedRate.code);
-                }
+                    try
+                    {
+                        nastedRate.Url = links[i];
+                        i++;
+                    }
+                    catch (ArgumentOutOfRangeException a) { continue; };
+
+                   
+                
+
             }
             nastedRates = CurrencyObjectsList[index].rates;
             CurrencyListView.ItemsSource = nastedRates;
+
+        }
+       
+    
+           
+        
+        
+        private async System.Threading.Tasks.Task addUrl()
+        {
+
+           
+                foreach (NastedRates nastedRate in CurrencyObjectsList[0].rates)
+                {
+                    try
+                    {
+                        HttpWebRequest myRequest = (HttpWebRequest)WebRequest.Create("https://restcountries.eu/rest/v2/currency/" + nastedRate.code);
+                        using (WebResponse myResponse = await myRequest.GetResponseAsync())
+                        {
+                            using (StreamReader sr = new StreamReader(myResponse.GetResponseStream(), System.Text.Encoding.UTF8))
+                            {
+                                result = sr.ReadToEnd();
+                                dynamic json = JsonConvert.DeserializeObject(result);
+                                links.Add((string)"https://www.countryflags.io/" + (string)json[0]["alpha2Code"] + "/flat/64.png");
+
+                                System.Diagnostics.Debug.WriteLine((string)json[0]["alpha2Code"]);
+                                //CurrencyListView.ItemsSource = nastedRates;
+
+                            }
+
+                        }
+                    }
+                    catch (WebException ex)
+                    {
+
+       
+                        break;
+                    }
+
+
+               
+            }
+            
+            //CurrencyListView.it
         }
     }
 }

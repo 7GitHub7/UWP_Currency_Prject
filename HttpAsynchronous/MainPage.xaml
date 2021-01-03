@@ -9,7 +9,8 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.1*" />
+            <RowDefinition Height="0.3*" />
+            <RowDefinition Height="0.04*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -20,24 +21,29 @@
 
 
         <Grid Grid.Row="0" Grid.Column="0">
-
-            <StackPanel x:Name="MyStackPanel1" Orientation="Horizontal">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Row="0" Grid.Column="0" >
+                <Image Source="ms-appx:///Assets/logo2.jpg"  />
+            </Grid>
+                    <!--<StackPanel x:Name="MyStackPanel1" Orientation="Horizontal">
                 
                 <Button x:Name="DownloadDataBtn"
                         Click="button_ClickAsync"
                         Content="Pobierz daty"
                         ClickMode="Release"
-                        Margin="5,5,5,5"
-                        HorizontalAlignment="Stretch" />
+                        Margin="5,5,5,5" Width="126" />
 
                 <TextBlock Text="Data"
                            x:Name="publishDatetBox"
                            Margin="0,10,0,0" />
 
-            </StackPanel>
+            </StackPanel>-->
         </Grid>
 
-        <Grid Grid.Row="1" Grid.Column="0">
+        <Grid Grid.Row="2" Grid.Column="0" Background="LightGray">
 
          
 
@@ -55,7 +61,7 @@
             </ScrollViewer>
         </Grid>
 
-        <Grid Grid.Row="0" Grid.Column="1">
+        <Grid Grid.Row="0" Grid.Column="1" >
             
             <StackPanel x:Name="MyStackPanel2" Orientation="Horizontal">
 
@@ -85,7 +91,7 @@
 
         </Grid>
 
-        <Grid Grid.Column="1" Grid.Row="1" >
+        <Grid  Grid.Row="2" Grid.Column="1" Background="LightGray">
 
             <ListView IsItemClickEnabled="True"
                         SelectionMode="Single"
@@ -96,36 +102,53 @@
 
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel>
-                            <TextBlock Text="{Binding currency}"
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*" />
+                                <RowDefinition Height="1*" />
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid Grid.Row="0" Grid.Column="0" >
+                                <Image Source="{Binding Url, Mode=OneWay}"  Width ="100"/>
+                            </Grid>
+                            <Grid Grid.Row="0" Grid.Column="1" >
+                                <StackPanel x:Name="MyStackPanel" Orientation="Vertical">
+                                    <TextBlock Text="{Binding currency}"
                                 FontSize="24"
                                 FontStyle="Italic"
                                 FontWeight="SemiBold"
-                                Foreground="DarkBlue" />  
+                                Foreground="DarkBlue" />
                             
-                            <TextBlock Text="{Binding code}"
+                                <TextBlock Text="{Binding code}"
                                    
-                            FontSize="16"
-                            Foreground="DarkGray"
-                            />
-                                <TextBlock Text="{Binding mid }"
+                                FontSize="16"
+                                Foreground="DarkGray"
+                                />
+                                    <TextBlock Text="{Binding mid }"
                                    
-                            FontSize="16"
-                            Foreground="DarkGray"
-                            />
-                                <StackPanel x:Name="MyStackPanel" Orientation="Horizontal">
-                                    <TextBlock Text="Przelicznik: "
-                            Margin="20,0,40,8"
-                            FontSize="16"
-                            Foreground="DarkGray"
-                            />
+                                FontSize="16"
+                                Foreground="DarkGray"
+                                />
+                               
+                           
+                                        <TextBlock Text="Przelicznik: "
+                                Margin="20,0,40,8"
+                                FontSize="16"
+                                Foreground="DarkGray"
+                                />
                                     <TextBlock Text="{ Binding Factor }"
                                   
-                            FontSize="16"
-                            Foreground="DarkGray"
-                            />
-                            </StackPanel>
-                        </StackPanel>
+                                FontSize="16"
+                                Foreground="DarkGray"
+                                />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
