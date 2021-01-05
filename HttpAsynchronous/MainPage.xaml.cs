@@ -16,11 +16,12 @@ namespace HttpAsynchronous
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
     /// 
-
+    
     public sealed partial class MainPage : Page
     {
         private int counter;
         private string result;
+        private string currency = "zl";
 
         public MainPage()
         {
@@ -30,9 +31,11 @@ namespace HttpAsynchronous
         }
         private void HyperlinkButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(BlankPage2));
+            
+           
+            this.Frame.Navigate(typeof(BlankPage2), this.currency);
         }
-
+  
 
         public class Currency
         {
@@ -108,6 +111,7 @@ namespace HttpAsynchronous
             int index = CurrencyListView.SelectedIndex;
             Tb_factor.Text = Convert.ToString(nastedRates[index].Factor);
             Tb_mid.Text = Convert.ToString(nastedRates[index].mid);
+            this.currency = Convert.ToString(nastedRates[index].code);
         }
 
         private async System.Threading.Tasks.Task addFactor(int index)
@@ -174,7 +178,7 @@ namespace HttpAsynchronous
                
             }
             
-            //CurrencyListView.it
+           
         }
     }
 }
