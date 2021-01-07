@@ -34,8 +34,30 @@ namespace HttpAsynchronous
             
            
             this.Frame.Navigate(typeof(BlankPage2), this.currency);
+
+            var Start = DateTime.Parse("15 Dec 2012 13:00:00");
+            var End = DateTime.Parse("16 Feb 2013 14:00:00");
+
+            var runningDate = Start;
+            while (runningDate < End)
+            {
+                var nextMonthSeed = runningDate.AddMonths(1);
+                var to = DateHelper.Min(new DateTime(nextMonthSeed.Year, nextMonthSeed.Month, 1), End);
+                Console.WriteLine("{0} -> {1}", runningDate.ToString("dd-MM-yyyy HH:mm:ss"), to.ToString("dd-MM-yyyy HH:mm:ss"));
+                runningDate = to;
+            }
         }
-  
+
+        public static class DateHelper
+        {
+            public static DateTime Min(DateTime date1, DateTime date2)
+            {
+                return (date1 < date2 ? date1 : date2);
+            }
+        }
+
+
+
 
         public class Currency
         {
